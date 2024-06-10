@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "xJK/psFpoTpTUiaLUoAGHJ1709X9qv+ByfT6RNvsegC/fMNL5o0uu7pq96VZAfE83GhoGNGeeSnMXxV6e34BuA==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\mgadz\\Documents\\Stardew Mods\\PrismaticValleyFramework\\PrismaticValleyFramework\\PrismaticValleyFramework.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\mgadz\\.nuget\\packages\\pathoschild.stardew.modbuildconfig\\4.1.1\\pathoschild.stardew.modbuildconfig.4.1.1.nupkg.sha512"
+  ],
+  "logs": []
+}

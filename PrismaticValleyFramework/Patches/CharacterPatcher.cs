@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace PrismaticValleyFramework.Patches
 {
-    internal class FarmAnimalPatcher
+    internal class CharacterPatcher
     {
         private static IMonitor Monitor;
 
@@ -17,8 +17,8 @@ namespace PrismaticValleyFramework.Patches
         {
             Monitor = monitor;
             harmony.Patch(
-                original: AccessTools.DeclaredMethod(typeof(StardewValley.FarmAnimal), nameof(StardewValley.FarmAnimal.draw)),
-                transpiler: new HarmonyMethod(typeof(FarmAnimalPatcher), nameof(FarmAnimalPatcher.draw_Transpiler))
+                original: AccessTools.Method(typeof(StardewValley.Character), nameof(StardewValley.Character.draw), new Type[] {typeof(SpriteBatch), typeof(int), typeof(float)}),
+                transpiler: new HarmonyMethod(typeof(CharacterPatcher), nameof(CharacterPatcher.draw_Transpiler))
             );
         }
 
@@ -33,9 +33,9 @@ namespace PrismaticValleyFramework.Patches
                 ).ThrowIfNotMatch("Could not find proper entry point for draw_Transpiler");
                 
                 matcher.InsertAndAdvance(
-                    new CodeInstruction(OpCodes.Ldloc_2)
+                    new CodeInstruction(OpCodes.Ldarg_0)
                 );
-                matcher.Set(OpCodes.Call, AccessTools.Method(typeof(ParseCustomFields), "getCustomColorFromFarmAnimalData"));
+                matcher.Set(OpCodes.Call, AccessTools.Method(typeof(ParseCustomFields), "getCustomColorFromCharacter"));
                 return matcher.InstructionEnumeration();
             }
             catch (Exception ex)

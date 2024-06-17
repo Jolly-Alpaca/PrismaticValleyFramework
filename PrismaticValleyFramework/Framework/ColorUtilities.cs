@@ -1,24 +1,32 @@
-using System;
 using Microsoft.Xna.Framework;
 using StardewValley;
-using StardewValley.GameData.FarmAnimals;
-using StardewModdingAPI;
 
 namespace PrismaticValleyFramework.Framework
 {
-    static class Utilities
+    static class ColorUtilities
     {
-        public static Color getCustomColorFromFarmAnimalData(FarmAnimalData data)
+        public static Color getColorFromString(string colorString)
         {
-            //ModEntry.ModMonitor.Log($"getCustomColorFromFarmAnimalData: {data.CustomFields != null}.", LogLevel.Debug);
-            if (data != null && data.CustomFields != null && data.CustomFields.TryGetValue("JollyLlama.PrismaticValleyFramework/Color", out string? colorString))
-                return getColor(colorString);
-            return Color.White;
+            switch (colorString) {
+                case "Prismatic": return Utility.GetPrismaticColor();
+                default: return Utility.StringToColor(colorString) ?? Color.White;
+            }
+        } 
+        
+        // Multiplitive Blending
+        public static Color getTintedColor(Color baseColor, Color tintColor)
+        {
+            Color tintedColor = default(Color);
+            // Equivalent to color.R/255 to get the float value, multiply the two floats together, then multiple by 255 to convert back to byte
+            tintedColor.R = (byte)(baseColor.R * tintColor.R / 255f);
+            tintedColor.G = (byte)(baseColor.G * tintColor.G / 255f);
+            tintedColor.B = (byte)(baseColor.B * tintColor.B / 255f);
+            tintedColor.A = (byte)(baseColor.A * tintColor.A / 255f);
+            return tintedColor;
         }
-
-        private static Color getColor(string colorString)
+        // Utility.getBlendedColor exists, but does some things with random
+/*         public static Color getColorFromString(string colorString)
         {
-            //ModEntry.ModMonitor.Log($"getColor", LogLevel.Debug);
             string[] colors = colorString.Split(',');
             switch (colors.Length) {
                 case 1: return getColorByName(colors[0]);
@@ -31,8 +39,8 @@ namespace PrismaticValleyFramework.Framework
                         return new Color(colorValuesA[0], colorValuesA[1], colorValuesA[2], colorValuesA[3]);
                     break;
             }
-            return Color.White;
-        }
+            return Color.White; 
+        }*/
 
         // Cast array as int. Return false if fails.
         private static bool tryParseColors(string[] colors, out int[] colorValues)

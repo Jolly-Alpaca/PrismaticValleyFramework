@@ -7,6 +7,7 @@ using HarmonyLib;
 using StardewModdingAPI;
 using StardewValley;
 using PrismaticValleyFramework.Patches;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace PrismaticValleyFramework
@@ -23,12 +24,16 @@ namespace PrismaticValleyFramework
             ModMonitor = Monitor;
             ModHelper = helper;
             
+            // Apply Harmony patches
             var harmony = new Harmony(this.ModManifest.UniqueID);
-            Harmony.DEBUG = true;
-            harmony.Patch(
-                original: AccessTools.Method(typeof(StardewValley.FarmAnimal), nameof(StardewValley.FarmAnimal.draw), new Type[] {typeof(SpriteBatch)}),
-                transpiler: new HarmonyMethod(typeof(FarmAnimalPatcher), nameof(FarmAnimalPatcher.draw_Transpiler))
-            );
+            //Harmony.DEBUG = true;
+            FarmAnimalPatcher.Apply(ModMonitor, harmony);
+            AnimalPagePatcher.Apply(ModMonitor, harmony);
+            //CharacterPatcher.Apply(ModMonitor, harmony);
+            ObjectPatcher.Apply(ModMonitor, harmony);
+            FurniturePatcher.Apply(ModMonitor, harmony);
+            CraftingPagePatcher.Apply(ModMonitor, harmony);
+            CollectionsPagePatcher.Apply(ModMonitor, harmony);
         }
     }
 }

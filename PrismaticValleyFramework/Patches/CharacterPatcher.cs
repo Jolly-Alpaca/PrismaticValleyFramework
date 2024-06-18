@@ -42,7 +42,7 @@ namespace PrismaticValleyFramework.Patches
                 // Find first call to Color.White. This is the tint passed to the AnimatedSprite.draw method.
                 matcher.MatchStartForward(
                     // Color.get_White appears in il instructions, but cannot be targeted directly using nameof
-                    new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(Color), nameof(Color.White))) 
+                    new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(Color), "get_White")) 
                 ).ThrowIfNotMatch("Could not find proper entry point for draw_Transpiler");
                 
                 // Load the Character instance as the parameter for the custom get color method

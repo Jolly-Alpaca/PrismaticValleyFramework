@@ -49,7 +49,7 @@ namespace PrismaticValleyFramework.Patches
                 ).ThrowIfNotMatch("Could not find proper entry point for draw_Transpiler in Furniture");
                 // Advance to the call to Color.White in the draw method for held object
                 matcher.MatchStartForward(
-                    new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(Color), nameof(Color.White)))
+                    new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(Color), "get_White"))
                 ).ThrowIfNotMatch("Could not find proper entry point for Color.White in draw_Transpiler in Furniture");
             
                 // Load the ParsedItemData as the parameter for the custom get color method

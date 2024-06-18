@@ -59,7 +59,7 @@ namespace PrismaticValleyFramework.Patches
                 var matcher = new CodeMatcher(code, il);
                 // Find the call to Color.White
                 matcher.MatchStartForward(
-                    new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(Color), nameof(Color.White)))
+                    new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(Color), "get_White"))
                 ).ThrowIfNotMatch("Could not find proper entry point for drawWhenHeld_Transpiler");
                 
                 // Load the ParsedItemData (dataOrErrorItem) as the parameter for the custom get color method
@@ -152,7 +152,7 @@ namespace PrismaticValleyFramework.Patches
                 var matcher = new CodeMatcher(code, il);
                 // Find the first call to Color.White
                 matcher.MatchStartForward(
-                    new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(Color), nameof(Color.White)))
+                    new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(Color), "get_White"))
                 ).ThrowIfNotMatch("Could not find proper entry point for drawAsProp_Transpiler");
                 
                 // Load the ParsedItemData (dataOrErrorItem) as the parameter for the custom get color method
@@ -166,7 +166,7 @@ namespace PrismaticValleyFramework.Patches
                 // Begin searching backwards from the end of the instructions
                 matcher.End();
                 matcher.MatchStartBackwards(
-                    new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(Color), nameof(Color.White)))
+                    new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(Color), "get_White"))
                 ).ThrowIfNotMatch("Could not find proper entry point for drawAsProp_Transpiler backwards");
                 
                 // Load the ParsedItemData (dataOrErrorItem2) as the parameter for the custom get color method
@@ -249,7 +249,7 @@ namespace PrismaticValleyFramework.Patches
                 ).ThrowIfNotMatch("Could not find proper entry point for big craftables in draw_Transpiler in Object");
                 // Advance from match to the call to Color.White in the draw method for big craftables
                 matcher.MatchStartForward(
-                    new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(Color), nameof(Color.White)))
+                    new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(Color), "get_White"))
                 ).ThrowIfNotMatch("Could not find proper entry point for Color.White for big craftables in draw_Transpiler in Object");
                 
                 // Load the ParsedItemData (dataOrErrorItem) as the parameter for the custom get color method
@@ -267,7 +267,7 @@ namespace PrismaticValleyFramework.Patches
                 ).ThrowIfNotMatch("Could not find proper entry point for objects in draw_Transpiler in Object");
                 // Advance from match to the call to Color.White in the draw method for non big craftable objects
                 matcher.MatchStartForward(
-                    new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(Color), nameof(Color.White)))
+                    new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(Color), "get_White"))
                 ).ThrowIfNotMatch("Could not find proper entry point for Color.White for objects in draw_Transpiler in Object");
                 
                 // Load the ParsedItemData (dataOrErrorItem3) as the parameter for the custom get color method
@@ -285,7 +285,7 @@ namespace PrismaticValleyFramework.Patches
                 ).ThrowIfNotMatch("Could not find proper entry point for sprinkler attachments in draw_Transpiler in Object");
                 // Advance from match to the call to Color.White in the draw method for sprinkler attachments
                 matcher.MatchStartForward(
-                    new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(Color), nameof(Color.White)))
+                    new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(Color), "get_White"))
                 ).ThrowIfNotMatch("Could not find proper entry point for Color.White for sprinkler attachments in draw_Transpiler in Object");
                 
                 // Load the ParsedItemData (dataOrErrorItem4) as the parameter for the custom get color method
@@ -302,7 +302,7 @@ namespace PrismaticValleyFramework.Patches
                 ).ThrowIfNotMatch("Could not find proper entry point for held objects within the object in draw_Transpiler in Object");
                 // Advance from match to the call to Color.White in the draw method for held objects within the object
                 matcher.MatchStartForward(
-                    new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(Color), nameof(Color.White)))
+                    new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(Color), "get_White"))
                 ).ThrowIfNotMatch("Could not find proper entry point for Color.White for held objects within the object in draw_Transpiler in Object");
                 
                 // Load the ParsedItemData (dataOrErrorItem5) as the parameter for the custom get color method
@@ -360,7 +360,7 @@ namespace PrismaticValleyFramework.Patches
                 var matcher = new CodeMatcher(code, il);
                 // Find the first call to Color.White
                 matcher.MatchStartForward(
-                    new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(Color), nameof(Color.White)))
+                    new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(Color), "get_White"))
                 ).ThrowIfNotMatch("Could not find proper entry point for big craftables in draw_Transpiler2 in Object");
                 
                 // Load the ParsedItemData (dataOrErrorItem) as the parameter for the custom get color method
@@ -374,7 +374,7 @@ namespace PrismaticValleyFramework.Patches
                 // Begin searching backwards from the end of the instructions
                 matcher.End();
                 matcher.MatchStartBackwards(
-                    new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(Color), nameof(Color.White)))
+                    new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(Color), "get_White"))
                 ).ThrowIfNotMatch("Could not find proper entry point for objects in draw_Transpiler2");
                 
                 // Load the ParsedItemData (dataOrErrorItem2) as the parameter for the custom get color method

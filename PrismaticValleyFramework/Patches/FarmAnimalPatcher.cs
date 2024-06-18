@@ -40,7 +40,7 @@ namespace PrismaticValleyFramework.Patches
                 // Find where Color.White is loaded
                 var matcher = new CodeMatcher(code, il);
                 matcher.MatchStartForward(
-                    new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(Color), nameof(Color.White)))
+                    new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(Color), "get_White"))
                 ).ThrowIfNotMatch("Could not find proper entry point for draw_Transpiler");
                 
                 // Load the FarmAnimalData as the parameter for the custom get color method

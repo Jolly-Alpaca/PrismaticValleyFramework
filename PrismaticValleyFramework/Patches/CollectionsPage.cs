@@ -51,7 +51,7 @@ namespace PrismaticValleyFramework.Patches
                 // Find where Color.White is loaded 
                 // This moves to the second condition statement for the color being passed to ClickableTextureComponent.draw
                 matcher.MatchStartForward(
-                    new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(Color), nameof(Color.White)))
+                    new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(Color), "get_White"))
                 ).ThrowIfNotMatch("Could not find second proper entry point for draw_Transpiler in CollectionsPage");
                 
                 matcher.Advance(1);

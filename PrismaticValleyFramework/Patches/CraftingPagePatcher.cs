@@ -43,7 +43,7 @@ namespace PrismaticValleyFramework.Patches
                 // Patch the draw function for grayed out recipes
                 // Find where Color.DimGray is loaded
                 matcher.MatchStartForward(
-                    new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(Color), nameof(Color.DimGray)))
+                    new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(Color), "get_DimGray"))
                 ).ThrowIfNotMatch("Could not find proper entry point for inactive recipes for draw_Transpiler in CraftingPage");
                 
                 // Move to start of parameter loading for call to ClickableTextureComponent.draw passing Color.DimGray as the color parameter

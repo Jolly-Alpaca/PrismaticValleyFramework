@@ -3,7 +3,6 @@ using HarmonyLib;
 using StardewModdingAPI;
 using PrismaticValleyFramework.Framework;
 using Microsoft.Xna.Framework;
-using StardewValley.Menus;
 
 namespace PrismaticValleyFramework.Patches
 {
@@ -11,49 +10,71 @@ namespace PrismaticValleyFramework.Patches
     {
         private static IMonitor Monitor;
 
+        /// <summary>
+        /// Apply the harmony patches to CollectionsPage.cs
+        /// </summary>
+        /// <param name="monitor">The Monitor instance for the PrismaticValleyFramework module</param>
+        /// <param name="harmony">The Harmony instance for the PrismaticvalleyFramework module</param>
         internal static void Apply(IMonitor monitor, Harmony harmony)
         {
             Monitor = monitor;
             harmony.Patch(
-                // Method name passed as string to access/patch private methods (nameof cannot be used for private methods)
+                // Use DeclaredMethod as CollectionsPage.cs has only one implementation of the draw method
                 original: AccessTools.DeclaredMethod(typeof(StardewValley.Menus.CollectionsPage), nameof(StardewValley.Menus.CollectionsPage.draw)),
-                transpiler: new HarmonyMethod(typeof(CollectionsPagePatcher), nameof(CollectionsPagePatcher.draw_Transpiler))
+                transpiler: new HarmonyMethod(typeof(CollectionsPagePatcher), nameof(draw_Transpiler))
             );
         }
 
+        /// <summary>
+        /// Transpiler instructions to patch the draw method in CollectionsPage.cs. 
+        /// Overwrites the call to ClickableTextureComponent.draw drawing the collection items to call a custom draw method instead.
+        /// </summary>
+        /// <param name="instructions">The IL instructions</param>
+        /// <param name="il">The IL generator</param>
+        /// <returns>The patched IL instructions</returns>
         internal static IEnumerable<CodeInstruction> draw_Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator il)
         {
             var code = instructions.ToList();
             try
             {
                 var matcher = new CodeMatcher(code, il);
-                // Find the first call to Color multiply
+                // Find the first call to Color multiply (This is a * between the color and float)
+                // This moves to the first condition statement for the color being passed to ClickableTextureComponent.draw
+                // Not using nameof since this is an unusual method call and I'd prefer not to end up breaking it
                 matcher.MatchStartForward(
                     new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(Color), "op_Multiply", new Type[] {typeof(Color), typeof(float)}))
                 ).ThrowIfNotMatch("Could not find first proper entry point for draw_Transpiler in CollectionsPage");
                 
-                matcher.RemoveInstruction(); // Delete first call to Color multiply to pass color and colorModifier in as separate variables to override function
+                // Remove first call to Color multiply to pass color and colorModifier in as separate variables to the override method
+                matcher.RemoveInstruction(); 
                 
+                // Find where Color.White is loaded 
+                // This moves to the second condition statement for the color being passed to ClickableTextureComponent.draw
                 matcher.MatchStartForward(
-                    // Find where Color.White is loaded
-                    new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(Color), "White"))
+                    new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(Color), nameof(Color.White)))
                 ).ThrowIfNotMatch("Could not find second proper entry point for draw_Transpiler in CollectionsPage");
                 
                 matcher.Advance(1);
+                // Load float of 1 as the colorModifier when color passed to ClickableTextureComponent.draw is Color.White
                 matcher.InsertAndAdvance(
-                    new CodeInstruction(OpCodes.Ldc_R4, 1.0f) // Load float of 1 as the colorModifier when color is Color.White
+                    new CodeInstruction(OpCodes.Ldc_R4, 1.0f) 
                 );
                 
-                // Find the second call to Color multiply
+                // Find the second call to Color multiply 
+                // This moves to the third condition statement for the color being passed to ClickableTextureComponent.draw)
                 matcher.MatchStartForward(
                     new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(Color), "op_Multiply", new Type[] {typeof(Color), typeof(float)}))
                 ).ThrowIfNotMatch("Could not find third proper entry point for draw_Transpiler in CollectionsPage");
 
-                matcher.RemoveInstruction(); // Delete second call to Color multiply
+                // Remove second call to Color multiply
+                matcher.RemoveInstruction(); 
                 matcher.Advance(1);
-                matcher.RemoveInstructions(4); // Delete the call to ClickableTextureComponent.draw and the default loads for its 3 optional parameters
-                matcher.InsertAndAdvance( // Add the override method to handle the new draw
-                    new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(ParseCustomFields), "getCustomColorFromCollectionsPage"))
+                // Remove the call to ClickableTextureComponent.draw and the default loads for its 3 optional parameters 
+                // *Unknown where the final parameter, yOffset, is defined, but the il instructions include a load for it
+                matcher.RemoveInstructions(4); 
+                // Insert a call to the custom draw method
+                matcher.InsertAndAdvance( 
+                    new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(ParseCustomFields), nameof(ParseCustomFields.DrawCustomColorForCollectionsPage)))
                 );
                 return matcher.InstructionEnumeration();
             }

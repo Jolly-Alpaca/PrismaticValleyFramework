@@ -1,14 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using HarmonyLib;
+﻿using HarmonyLib;
 using StardewModdingAPI;
-using StardewValley;
 using PrismaticValleyFramework.Patches;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace PrismaticValleyFramework
 {
@@ -27,9 +19,13 @@ namespace PrismaticValleyFramework
             // Apply Harmony patches
             var harmony = new Harmony(this.ModManifest.UniqueID);
             //Harmony.DEBUG = true;
+
+            // Apply FarmAnimal patches
             FarmAnimalPatcher.Apply(ModMonitor, harmony);
             AnimalPagePatcher.Apply(ModMonitor, harmony);
             //CharacterPatcher.Apply(ModMonitor, harmony);
+
+            // Apply object and big craftable patches
             ObjectPatcher.Apply(ModMonitor, harmony);
             FurniturePatcher.Apply(ModMonitor, harmony);
             CraftingPagePatcher.Apply(ModMonitor, harmony);

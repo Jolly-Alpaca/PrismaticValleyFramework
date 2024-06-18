@@ -5,6 +5,6 @@
   "Description": "Framework for adding the prismatic effect to other objects in Stardew Valley",
   "UniqueID": "JollyLlama.PrismaticValleyFramework",
   "EntryDll": "PrismaticValleyFramework.dll",
-  "MinimumApiVersion": "3.0.0",
-  "UpdateKeys": []
+  "MinimumApiVersion": "4.0.0",
+  "UpdateKeys": [ "GitHub:Jolly-Alpaca/PrismaticValleyFramework", "Nexus:25287" ]
 }

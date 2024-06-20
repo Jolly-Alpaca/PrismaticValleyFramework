@@ -95,7 +95,11 @@ namespace PrismaticValleyFramework.Framework
         public static Color getCustomColorFromFarmAnimalData(FarmAnimalData data)
         {
             if (data != null && data.CustomFields != null && data.CustomFields.TryGetValue("JollyLlama.PrismaticValleyFramework/Color", out string? colorString))
+            {
+                if (data.CustomFields.TryGetValue("JollyLlama.PrismaticValleyFramework/Palette", out string? paletteString))
+                    return ColorUtilities.getColorFromString(colorString, paletteString);
                 return ColorUtilities.getColorFromString(colorString);
+            }
             return Color.White;
         }
 
@@ -160,7 +164,11 @@ namespace PrismaticValleyFramework.Framework
         public static Color getCustomColorFromObjectData(ObjectData data)
         {
             if (data.CustomFields != null && data.CustomFields.TryGetValue("JollyLlama.PrismaticValleyFramework/Color", out string? colorString))
+            {
+                if (data.CustomFields.TryGetValue("JollyLlama.PrismaticValleyFramework/Palette", out string? paletteString))
+                    return ColorUtilities.getColorFromString(colorString, paletteString);
                 return ColorUtilities.getColorFromString(colorString);
+            }
             return Color.White;
         }
 
@@ -173,7 +181,11 @@ namespace PrismaticValleyFramework.Framework
         public static Color getCustomColorFromBigCraftableData(BigCraftableData data)
         {
             if (data.CustomFields != null && data.CustomFields.TryGetValue("JollyLlama.PrismaticValleyFramework/Color", out string? colorString))
+            {
+                if (data.CustomFields.TryGetValue("JollyLlama.PrismaticValleyFramework/Palette", out string? paletteString))
+                    return ColorUtilities.getColorFromString(colorString, paletteString);
                 return ColorUtilities.getColorFromString(colorString);
+            }
             return Color.White;
         }
     }

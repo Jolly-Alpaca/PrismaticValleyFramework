@@ -1,14 +1,51 @@
 ## Prismatic Valley Framework
-Framework for adding the prismatic effect to other objects in Stardew Valley
+**Prismatic Valley Framework** is a Stardew Valley mod which allows mod authors to add an override color to apply to their objects in game with Content Patcher alone. This includes static colors, the Stardew prismatic effect, and even custom prismatic effects. No C# or non-CP configuration required.
 
-## Getting Started
+## Get Started
+### Implementation
+1. Create your textures. See [A Lesson on How MonoGame Applies Color](#a-lesson-on-how-monogame-applies-color) for tips on how to color your textures.
+2. Create your Content Patcher content pack.
+3. Add the following to the CustomFields field of the object you want to apply a color override to:
+```
+"JollyLlama.PrismaticValleyFramework/Color": "<your-color-here>"
+```
+If the object does not already have the CustomFields field, you can add it at the end of the field list for the object like so:
+```
+"{{ModId}}.PrismaticDinosaurMayonnaise": {
+    "Name": "{{ModId}}.PrismaticDinosaurMayonnaise",
+    "DisplayName": "{{i18n: Mayonnaise.Prismatic.Name}}",
+    "Description": "{{i18n: Mayonnaise.Prismatic.Description}}",
+    "Type": "Basic",
+    "Category": -26,
+    "Price": 1750,
+    "Texture": "{{ModId}}/PrismaticDinosaurMayonnaise",
+    "SpriteIndex": 0,
+    "Edibility": 100,
+    "IsDrink": true,
+    "CustomFields": {
+        "JollyLlama.PrismaticValleyFramework/Color": "Prismatic"
+    }
+}
+```
+### Supported Color Formats
+- [MonoGame colors](https://docs.monogame.net/api/Microsoft.Xna.Framework.Color.html#properties) (e.g. "Red")
+- Hex codes (e.g. "#F4F4F4")
+- RGB/RGBA (e.g. "128 0 128 255")
+- "Prismatic"
+- "Custom Palette": Requires an addition CustomField field to configure (see below)
 
-### Examples
+### Custom Palette
+The Custom Palette lets you define a custom prismatic effect with your own color key frames. To illustrate, the native prismatic effect's color key frames are red, custom orange, custom yellow, lime, cyan, and violet. An in game algorithm smoothly transitions between these six colors to create the prismatic effect you see in game.
 
+For your own Custom Palette, you do not need to limit yourself to six colors. You can have as many (or as few) as you'd like. The list of colors must be written as a comma delimited string. The supported color formats are the same as the first three listed above.
+
+Example:
+```
 "CustomFields": {
   "JollyLlama.PrismaticValleyFramework/Color": "Custom Palette",
   "JollyLlama.PrismaticValleyFramework/Palette": "#01084F,#57234A,#BC355D,#CD5348,#F6BB5D,#7C6256"
 }
+```
 
 ## A Lesson on How MonoGame Applies Color
 ### Introduction

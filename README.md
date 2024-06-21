@@ -3,7 +3,7 @@
 
 ## Get Started
 ### Implementation
-1. Create your textures. See [A Lesson on How MonoGame Applies Color](#a-lesson-on-how-monogame-applies-color) for tips on how to color your textures.
+1. Create your textures. See [A Lesson on How MonoGame Applies Color](#a-lesson-on-how-monogame-applies-color) for tips on how to color your textures to maximize saturation.
 2. Create your Content Patcher content pack.
 3. Add the following to the CustomFields field of the object you want to apply a color override to:
 ```
@@ -30,7 +30,7 @@ If the object does not already have the CustomFields field, you can add it at th
 ### Supported Color Formats
 - [MonoGame colors](https://docs.monogame.net/api/Microsoft.Xna.Framework.Color.html#properties) (e.g. "Red")
 - Hex codes (e.g. "#F4F4F4")
-- RGB/RGBA (e.g. "128 0 128 255")
+- RGB/RGBA (e.g. "128 0 128 128")
 - "Prismatic"
 - "Custom Palette": Requires an addition CustomField field to configure (see below)
 

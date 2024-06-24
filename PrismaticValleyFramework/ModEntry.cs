@@ -30,6 +30,7 @@ namespace PrismaticValleyFramework
             FurniturePatcher.Apply(ModMonitor, harmony);
             CraftingPagePatcher.Apply(ModMonitor, harmony);
             CollectionsPagePatcher.Apply(ModMonitor, harmony);
+            LibraryMuseumPatcher.Apply(ModMonitor, harmony);
         }
     }
 }

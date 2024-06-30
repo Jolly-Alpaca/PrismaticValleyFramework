@@ -1,15 +1,18 @@
 ## Prismatic Valley Framework
-**Prismatic Valley Framework** is a Stardew Valley mod which allows mod authors to add an override color to apply to their objects in game with Content Patcher alone. This includes static colors, the Stardew prismatic effect, and even custom prismatic effects. No C# or non-CP configuration required.
+**Prismatic Valley Framework** is a Stardew Valley mod which allows mod authors to add an override color to apply to their data assets in game with Content Patcher alone. This includes static colors, the Stardew prismatic effect, and even custom prismatic effects. No C# or non-CP configuration required.
 
 ## Get Started
 ### Implementation
 1. Create your textures. See [A Lesson on How MonoGame Applies Color](#a-lesson-on-how-monogame-applies-color) for tips on how to color your textures to maximize saturation.
 2. Create your Content Patcher content pack.
-3. Add the following to the CustomFields field of the object you want to apply a color override to:
+3. Add the configuration for the data asset you want to apply a color override to. This varies depending on if the data asset has a [CustomFields](https://www.stardewvalleywiki.com/Modding:Common_data_field_types#Custom_fields) field or not. 
+
+### Configuration for Data Assets with CustomFields Field
+For data assets with a CustomFields field, add the following to the CustomFields field of the object you want to apply a color override to:
 ```
 "JollyLlama.PrismaticValleyFramework/Color": "<your-color-here>"
 ```
-If the object does not already have the CustomFields field, you can add it at the end of the field list for the object like so:
+If the data does not already have the CustomFields field defined, you can add it at the end of the field list for the object like so:
 ```
 "{{ModId}}.PrismaticDinosaurMayonnaise": {
     "Name": "{{ModId}}.PrismaticDinosaurMayonnaise",
@@ -27,6 +30,78 @@ If the object does not already have the CustomFields field, you can add it at th
     }
 }
 ```
+### Configuration for Data Assets without CustomFields Field
+For data assets whose data structure does not include a CustomFields field, the configuration is defined in a JollyLlama.PrismaticValleyFramework targetted EditData action. The ID used in the entry for the PrismaticValleyFramework configuration data must match the ID of the data asset it applies to.
+```
+{  
+  "Action": "EditData",  
+  "Target": "JollyLlama.PrismaticValleyFramework",  
+  "Entries": {  
+    "<data-asset-id>": { 
+        "Color": "<required>",
+        "Palette": "<optional>",
+        "TextureTarget": "<optional>"
+    }  
+  }
+}
+```
+The PrismaticValleyFramework configuration data structure consists of three fields:
+1. Color (required): The color override
+2. Palette (optional): Only used if the color override is set to "Custom Palette". See [Custom Palette](#custom-palette) for more information.
+3. TextureTarget (optional - boots only): The Target where the custom spritesheet to use to draw the boots on the farmer is loaded. Defaults to the PrismaticValleyFramework assets. 
+A basic Prismatic entry might look something like this:
+```
+{
+  "Action": "EditData",
+  "Target": "Data/Boots",
+  "Entries": {
+    "{{ModId}}.CustomBoots": "<custom-boots-data>"
+  }
+}
+
+{  
+  "Action": "EditData",  
+  "Target": "JollyLlama.PrismaticValleyFramework",  
+  "Entries": {  
+    "{{ModId}}.CustomBoots": { 
+        "Color": "Prismatic"
+    }  
+  }
+}
+```
+An entry using a custom spritesheet might look something like this:
+```
+{
+  "Action": "EditData",
+  "Target": "Data/Boots",
+  "Entries": {
+    "{{ModId}}.CustomBootsSpecial": "<custom-boots-data>"
+  }
+}
+
+{
+  "Action": "Load",
+  "Target": "CustomBootsSpecialSpritesheet",
+  "FromFile": "CustomBootsSpritesheet.png"
+}
+
+{  
+  "Action": "EditData",  
+  "Target": "JollyLlama.PrismaticValleyFramework",  
+  "Entries": {  
+    "{{ModId}}.CustomBootsSpecial": { 
+        "Color": "Custom Palette",
+        "Palette": "#01084F,#57234A,#BC355D,#CD5348,#F6BB5D,#7C6256",
+        "TextureTarget": "CustomBootsSpecialSpritesheet"
+    }  
+  }
+}
+```
+#### Boots Notes
+The Color Texture and Color Index fields in the [data format for boots](https://www.stardewvalleywiki.com/Modding:Items#Boots) are not used by this framework. Vanilla boots are part of the base farmer sprite and are drawn as part of the farmer while other features, such as hair, pants, and shirts, are drawn separately, on top of the base farmer sprite. The Color Texture is used to change the color of the pixels representing the boots on the base farmer sprite. Unfortunately, this approach is an expensive action and not feasible for the emulating the prismatic effect, which requires updates every tick.
+
+Instead, this framework mimics the behavior of pants and shirts, and draws a separate boots sprite on top of the base farmer sprite. Essentially, the boots on the base farmer sprite are still drawn when the base farmer sprite is drawn, but this framework covers them up with a second spritesheet and applies the color override to just that second spritesheet. By default, the boots spritesheet included in the framework is the same as those on the base farmer, but without the body and using light shades of grey. If you'd like your boots to have a different design or color, use the TextureTarget field to add your own. However, as noted previously, the base farmer boots are still drawn, so if your boots are shorter than vanilla, the vanilla boots will be visible above your own. It may be possible to add support for this, however.
+
 ### Supported Color Formats
 - [MonoGame colors](https://docs.monogame.net/api/Microsoft.Xna.Framework.Color.html#properties) (e.g. "Red")
 - Hex codes (e.g. "#F4F4F4")

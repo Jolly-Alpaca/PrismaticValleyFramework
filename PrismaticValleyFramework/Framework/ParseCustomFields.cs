@@ -6,11 +6,16 @@ using StardewValley.GameData.Objects;
 using StardewValley.GameData.BigCraftables;
 using StardewValley.ItemTypeDefinitions;
 using StardewValley.Menus;
+using PrismaticValleyFramework.Models;
 
 namespace PrismaticValleyFramework.Framework
 {
     static class ParseCustomFields
     {
+        public static Dictionary<string, ModColorData> ModCustomColorData = new ();
+        // Flag to prevent the utility from continuously trying to load content if no content exists to load
+        public static bool isCustomColorData = true;
+
         /// <summary>
         /// Applies a custom color to the draw of a ClickableTextureComponent representing a FarmAnimal
         /// </summary>
@@ -177,7 +182,7 @@ namespace PrismaticValleyFramework.Framework
         /// </summary>
         /// <remarks>Target custom field: JollyLlama.PrismaticValleyFramework/Color</remarks>
         /// <param name="data">The metadata for a BigCraftable type item to pull the custom fields from</param>
-        /// <returnsThe custom color. Default: Color.White></returns>
+        /// <returns>The custom color. Default: Color.White></returns>
         public static Color getCustomColorFromBigCraftableData(BigCraftableData data)
         {
             if (data.CustomFields != null && data.CustomFields.TryGetValue("JollyLlama.PrismaticValleyFramework/Color", out string? colorString))
@@ -187,6 +192,91 @@ namespace PrismaticValleyFramework.Framework
                 return ColorUtilities.getColorFromString(colorString);
             }
             return Color.White;
+        }
+        
+        /// <summary>
+        /// Get the custom color from the ModColorData of a string dictionary instance (e.g. Boots) with additional tint applied
+        /// </summary>
+        /// <param name="itemId">The qualified or unqualified item ID</param>
+        /// <param name="color">The additional tint color to apply</param>
+        /// <returns>The custom color. Default: <paramref name="color"/></returns>
+        public static Color getCustomColorFromStringDictItemWithColor(string itemId, Color color)
+        {
+            // Get the custom color from the ModColorData
+            Color customColor = getCustomColorFromStringDictItem(itemId);
+            // No need to blend the colors if either is Color.White
+            if (customColor == Color.White) return color;
+            if (color == Color.White) return customColor;
+            // Return the blended color
+            return ColorUtilities.getTintedColor(customColor, color); 
+        }
+
+        /// <summary>
+        /// Get the custom color from the ModColorData of a string dictionary instance (e.g. Boots)
+        /// </summary>
+        /// <remarks>Target ModColorData for instance</remarks>
+        /// <param name="itemId">The unqualified item ID</param>
+        /// <returns>The custom color. Default: Color.White</returns>
+        public static Color getCustomColorFromStringDictItem(string itemId)
+        {
+            // Load the mod custom color data for all mods
+            LoadModColorData();
+
+            // Pull the ModColorData for the item from the dictionary if it exists
+            if (ModCustomColorData.TryGetValue(itemId, out  ModColorData? ItemColorData))
+            {
+                if (ItemColorData.Palette != null)
+                    return ColorUtilities.getColorFromString(ItemColorData.Color, ItemColorData.Palette);
+                return ColorUtilities.getColorFromString(ItemColorData.Color);
+            }
+            return Color.White;
+        }
+
+        /// <summary>
+        /// Get the target string for the custom texture from the ModColorData of a string dictionary instance (e.g. Boots)
+        /// </summary>
+        /// <param name="itemId">The unqualified item ID</param>
+        /// <returns>The target string for the custom texture. Default: null</returns>
+        public static string? getCustomTextureTargetFromStringDictItem(string itemId)
+        {
+            // Load the mod custom color data for all mods
+            LoadModColorData();
+
+            // Pull the ModColorData for the item from the dictionary if it exists
+            if (ModCustomColorData.TryGetValue(itemId, out  ModColorData? ItemColorData))
+            {
+                if (ItemColorData.TextureTarget != null) return ItemColorData.TextureTarget;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Determine if the item has custom color data
+        /// </summary>
+        /// <param name="itemId">The unqualified item ID</param>
+        /// <returns>True if the item has custom color data. Default false</returns>
+        public static bool HasCustomColorData(string itemId)
+        {
+            // Load the mod custom color data for all mods
+            LoadModColorData();
+
+            // Check if there is custom color data for the given item
+            if (ModCustomColorData.ContainsKey(itemId)) return true;
+            return false;
+        }
+
+        /// <summary>
+        /// Load the mod custom color data for all mods
+        /// </summary>
+        public static void LoadModColorData()
+        {
+            // Load the mod custom color data for all mods if no attempt has been made to load it
+            if (ModCustomColorData.Count == 0 && isCustomColorData)
+            {
+                ModCustomColorData = Game1.content.Load<Dictionary<string, ModColorData>>("JollyLlama.PrismaticValleyFramework");
+                if (ModCustomColorData.Count == 0)
+                    isCustomColorData = false; // Assumes no data to load
+            }
         }
     }
 }

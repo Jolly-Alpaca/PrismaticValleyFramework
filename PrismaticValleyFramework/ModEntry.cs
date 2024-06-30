@@ -1,6 +1,9 @@
 ﻿using HarmonyLib;
 using StardewModdingAPI;
+using StardewModdingAPI.Events;
 using PrismaticValleyFramework.Patches;
+using PrismaticValleyFramework.Models;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace PrismaticValleyFramework
 {
@@ -25,12 +28,36 @@ namespace PrismaticValleyFramework
             AnimalPagePatcher.Apply(ModMonitor, harmony);
             //CharacterPatcher.Apply(ModMonitor, harmony);
 
-            // Apply object and big craftable patches
+            // Apply object, big craftable, and boots patches
             ObjectPatcher.Apply(ModMonitor, harmony);
             FurniturePatcher.Apply(ModMonitor, harmony);
             CraftingPagePatcher.Apply(ModMonitor, harmony);
             CollectionsPagePatcher.Apply(ModMonitor, harmony);
             LibraryMuseumPatcher.Apply(ModMonitor, harmony);
+            BootsPatcher.Apply(ModMonitor, harmony);
+            FarmerRendererPatcher.Apply(ModMonitor, harmony);
+
+            ModHelper.Events.Content.AssetRequested += OnAssetRequested;
+        }
+
+        private void OnAssetRequested(object sender, AssetRequestedEventArgs e)
+        {
+            // Load custom boot data (equivalent to CustomFields field for data structures that don't have a CustomFields field)
+            if (e.NameWithoutLocale.IsEquivalentTo("JollyLlama.PrismaticValleyFramework"))
+            {
+                e.LoadFrom(() => new Dictionary<string, ModColorData>(), AssetLoadPriority.High);
+            }
+
+            // Load male shoe texture
+            if (e.NameWithoutLocale.IsEquivalentTo("JollyLlama.PrismaticValleyFramework/farmer_shoes"))
+            {
+                e.LoadFromModFile<Texture2D>("Assets/farmer_shoes.png", AssetLoadPriority.Medium);
+            }
+            // Load female shoe texture
+            if (e.NameWithoutLocale.IsEquivalentTo("JollyLlama.PrismaticValleyFramework/farmer_girl_shoes"))
+            {
+                e.LoadFromModFile<Texture2D>("Assets/farmer_girl_shoes.png", AssetLoadPriority.Medium);
+            }
         }
     }
 }

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PrismaticValleyFramework")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9447af6dc1f3a8fd88ba5eb533091d7bc43b8faa")]
 [assembly: System.Reflection.AssemblyProductAttribute("PrismaticValleyFramework")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PrismaticValleyFramework")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

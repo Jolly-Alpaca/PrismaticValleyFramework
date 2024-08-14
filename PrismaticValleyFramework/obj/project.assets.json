@@ -42,11 +42,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\mgadz\\Documents\\Stardew Mods\\PrismaticValleyFramework\\PrismaticValleyFramework\\PrismaticValleyFramework.csproj",
+      "projectUniqueName": "c:\\Users\\mgadz\\Documents\\Stardew Mods\\PrismaticValleyFramework\\PrismaticValleyFramework\\PrismaticValleyFramework.csproj",
       "projectName": "PrismaticValleyFramework",
-      "projectPath": "C:\\Users\\mgadz\\Documents\\Stardew Mods\\PrismaticValleyFramework\\PrismaticValleyFramework\\PrismaticValleyFramework.csproj",
+      "projectPath": "c:\\Users\\mgadz\\Documents\\Stardew Mods\\PrismaticValleyFramework\\PrismaticValleyFramework\\PrismaticValleyFramework.csproj",
       "packagesPath": "C:\\Users\\mgadz\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\mgadz\\Documents\\Stardew Mods\\PrismaticValleyFramework\\PrismaticValleyFramework\\obj\\",
+      "outputPath": "c:\\Users\\mgadz\\Documents\\Stardew Mods\\PrismaticValleyFramework\\PrismaticValleyFramework\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\mgadz\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -67,6 +67,11 @@
         "warnAsError": [
           "NU1605"
         ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -89,12 +94,26 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
+        "downloadDependencies": [
+          {
+            "name": "Microsoft.AspNetCore.App.Ref",
+            "version": "[6.0.32, 6.0.32]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Ref",
+            "version": "[6.0.32, 6.0.32]"
+          },
+          {
+            "name": "Microsoft.WindowsDesktop.App.Ref",
+            "version": "[6.0.32, 6.0.32]"
+          }
+        ],
         "frameworkReferences": {
           "Microsoft.NETCore.App": {
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.412\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303\\RuntimeIdentifierGraph.json"
       }
     }
   }

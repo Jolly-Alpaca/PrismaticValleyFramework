@@ -7,15 +7,12 @@ using StardewValley.GameData.BigCraftables;
 using StardewValley.ItemTypeDefinitions;
 using StardewValley.Menus;
 using PrismaticValleyFramework.Models;
+using StardewModdingAPI;
 
 namespace PrismaticValleyFramework.Framework
 {
     static class ParseCustomFields
     {
-        public static Dictionary<string, ModColorData> ModCustomColorData = new ();
-        // Flag to prevent the utility from continuously trying to load content if no content exists to load
-        public static bool isCustomColorData = true;
-
         /// <summary>
         /// Applies a custom color to the draw of a ClickableTextureComponent representing a FarmAnimal
         /// </summary>
@@ -219,11 +216,8 @@ namespace PrismaticValleyFramework.Framework
         /// <returns>The custom color. Default: Color.White</returns>
         public static Color getCustomColorFromStringDictItem(string itemId)
         {
-            // Load the mod custom color data for all mods
-            LoadModColorData();
-
             // Pull the ModColorData for the item from the dictionary if it exists
-            if (ModCustomColorData.TryGetValue(itemId, out  ModColorData? ItemColorData))
+            if (ModEntry.ModCustomColorData.TryGetValue(itemId, out  ModColorData? ItemColorData))
             {
                 if (ItemColorData.Palette != null)
                     return ColorUtilities.getColorFromString(ItemColorData.Color, ItemColorData.Palette);
@@ -239,11 +233,8 @@ namespace PrismaticValleyFramework.Framework
         /// <returns>The target string for the custom texture. Default: null</returns>
         public static string? getCustomTextureTargetFromStringDictItem(string itemId)
         {
-            // Load the mod custom color data for all mods
-            LoadModColorData();
-
             // Pull the ModColorData for the item from the dictionary if it exists
-            if (ModCustomColorData.TryGetValue(itemId, out  ModColorData? ItemColorData))
+            if (ModEntry.ModCustomColorData.TryGetValue(itemId, out  ModColorData? ItemColorData))
             {
                 if (ItemColorData.TextureTarget != null) return ItemColorData.TextureTarget;
             }
@@ -257,25 +248,125 @@ namespace PrismaticValleyFramework.Framework
         /// <returns>True if the item has custom color data. Default false</returns>
         public static bool HasCustomColorData(string itemId)
         {
-            // Load the mod custom color data for all mods
-            LoadModColorData();
-
             // Check if there is custom color data for the given item
-            if (ModCustomColorData.ContainsKey(itemId)) return true;
+            if (ModEntry.ModCustomColorData.ContainsKey(itemId)) return true;
             return false;
         }
 
         /// <summary>
-        /// Load the mod custom color data for all mods
+        /// Overwrite the path to load the skinColors texture and its index (which) after they are set if custom override color is currently active
         /// </summary>
-        public static void LoadModColorData()
+        /// <param name="skinColorsPath">The default path to load the texture from</param>
+        /// <param name="__instance">The calling FarmerRender instance</param>
+        /// <param name="which">The index in the texture to use</param>
+        /// <returns>The path to load the texture from</returns>
+        public static string getCustomColorsTextureFromConfig(string skinColorsPath, FarmerRenderer __instance, ref int which)
         {
-            // Load the mod custom color data for all mods if no attempt has been made to load it
-            if (ModCustomColorData.Count == 0 && isCustomColorData)
+            // Get the Farmer associated with the FarmerRenderer instance
+            // Check if the farmer currently has the Custom Color Buff
+            if (Game1.getAllFarmers().FirstOrDefault(x => x.FarmerRenderer == __instance) is { } farmer && farmer.hasBuff($"{ModEntry.Instance.ModManifest.UniqueID}.ColorBuff"))
             {
-                ModCustomColorData = Game1.content.Load<Dictionary<string, ModColorData>>("JollyLlama.PrismaticValleyFramework");
-                if (ModCustomColorData.Count == 0)
-                    isCustomColorData = false; // Assumes no data to load
+                // Load the custom texture (white) for optimal color saturation 
+                which = 0;
+                skinColorsPath = $"{ModEntry.Instance.ModManifest.UniqueID}\\customSkinColor";
+            }
+            return skinColorsPath;
+        }
+
+        /// <summary>
+        /// Overwrite the path to load the skinColors texture from if custom override color is currently active
+        /// </summary>
+        /// <param name="skinColorsPath">The default path to load the texture from</param>
+        /// <param name="__instance">The calling FarmerRender instance</param>
+        /// <returns>The path to load the texture from</returns>
+        public static string getCustomColorsTexturePathFromConfig(string skinColorsPath, FarmerRenderer __instance)
+        {
+            // Get the Farmer associated with the FarmerRenderer instance
+            // Check if the farmer currently has the Custom Color Buff
+            if (Game1.getAllFarmers().FirstOrDefault(x => x.FarmerRenderer == __instance) is { } farmer && farmer.hasBuff($"{ModEntry.Instance.ModManifest.UniqueID}.ColorBuff"))
+            {
+                // Load the custom texture (white) for optimal color saturation 
+                skinColorsPath = $"{ModEntry.Instance.ModManifest.UniqueID}\\customSkinColor";
+            }
+            return skinColorsPath;
+        }
+
+        /// <summary>
+        /// Overwrite the skinColors texture index after it is set if custom override color is currently active
+        /// </summary>
+        /// <param name="__instance">The calling FarmerRender instance</param>
+        /// <param name="index">The index in the texture to use</param>
+        /// <returns>The path to load the texture from</returns>
+        public static void getCustomColorsIndexFromConfig(FarmerRenderer __instance, ref int index)
+        {
+            // Get the Farmer associated with the FarmerRenderer instance
+            // Check if the farmer currently has the Custom Color Buff
+            if (Game1.getAllFarmers().FirstOrDefault(x => x.FarmerRenderer == __instance) is { } farmer && farmer.hasBuff($"{ModEntry.Instance.ModManifest.UniqueID}.ColorBuff"))
+            {
+                index = 0;
+            }
+        }
+
+        public static Color getCustomColorFromFarmerModData(Farmer who, Color color)
+        {
+            string colorBuffName = $"{ModEntry.Instance.ModManifest.UniqueID}.ColorBuff";
+            // Return default color if farmer does not have custom color buff
+            if (!who.hasBuff(colorBuffName)) return color;
+            
+            // Pull the farmer's color buff data from ModCustomColorData dictionary
+            Color customColor = getCustomColorFromStringDictItem(string.Concat(colorBuffName, who.UniqueMultiplayerID));
+            // No need to blend the colors if either is Color.White
+            if (customColor == Color.White) return color;
+            if (color == Color.White) return customColor;
+            // Return the blended color
+            return ColorUtilities.getTintedColor(customColor, color); 
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>Adding method to this class in case add support for custom sleeve colors (in which parsing custom fields would be required)</remarks>
+        /// <param name="__instance"></param>
+        /// <param name="who"></param>
+        public static void ApplySleeveColorToCustomSleeves(FarmerRenderer __instance, Farmer who)
+        {
+            // Return if farmer does not have custom color buff
+            if (!who.hasBuff($"{ModEntry.Instance.ModManifest.UniqueID}.ColorBuff")) return;
+            
+            string texture_name = $"{ModEntry.Instance.ModManifest.UniqueID}\\{(who.IsMale ? "farmer_sleeves" : "farmer_girl_sleeves")}";
+            // Add the custom texture's pixel indices to FarmerRenderer.recolorOffsets if they have not been added
+            if (!FarmerRenderer.recolorOffsets.ContainsKey(texture_name))
+                AddTextureToRecolorOffsets(__instance, texture_name);
+
+            // Apply sleeve color update to custom texture in the cache
+            ModEntry.SleevesTextureCache.UpdateFarmerSleevesTexture(who, texture_name);  
+        }
+
+        /// <summary>
+        /// Add the custom texture to FarmerRenderer instance's recolorOffsets dictionary
+        /// </summary>
+        /// <param name="__instance"></param>
+        /// <param name="texture_name"></param>
+        internal static void AddTextureToRecolorOffsets(FarmerRenderer __instance, string texture_name)
+        {
+            // Add the entry to FarmerRenderer.recolorOffsets to prevent the code from crashing when trying to access the dictionary entry
+            FarmerRenderer.recolorOffsets[texture_name] = new Dictionary<int, List<int>>();
+            // Get the FarmerRenderer's local content manager
+            if (ModEntry.Instance.Helper.Reflection.GetField<LocalizedContentManager>(__instance, "farmerTextureManager").GetValue() is LocalizedContentManager farmerTextureManager)
+            {
+                // Load the custom texture data
+                Texture2D source_texture = farmerTextureManager.Load<Texture2D>(texture_name);
+                Color[] source_pixel_data = new Color[source_texture.Width * source_texture.Height];
+                source_texture.GetData(source_pixel_data);
+
+                // Generate the sleeve pixel indices for the custom texture
+                // Use reflection to access the private method FarmerRenderer._GeneratePixelIndices; This adds the data to recolorOffsets
+                if (ModEntry.Instance.Helper.Reflection.GetMethod(__instance, "_GeneratePixelIndices") is IReflectedMethod GeneratePixelIndices)
+                {
+                    GeneratePixelIndices.Invoke(256, texture_name, source_pixel_data);
+                    GeneratePixelIndices.Invoke(257, texture_name, source_pixel_data);
+                    GeneratePixelIndices.Invoke(258, texture_name, source_pixel_data);
+                }
             }
         }
     }

@@ -1,9 +1,0 @@
-C:\Users\mgadz\Documents\Stardew Mods\PrismaticValleyFramework\PrismaticValleyFramework\bin\Debug\net6.0\PrismaticValleyFramework.deps.json
-C:\Users\mgadz\Documents\Stardew Mods\PrismaticValleyFramework\PrismaticValleyFramework\bin\Debug\net6.0\PrismaticValleyFramework.dll
-C:\Users\mgadz\Documents\Stardew Mods\PrismaticValleyFramework\PrismaticValleyFramework\obj\Debug\net6.0\PrismaticValleyFramework.csproj.AssemblyReference.cache
-C:\Users\mgadz\Documents\Stardew Mods\PrismaticValleyFramework\PrismaticValleyFramework\obj\Debug\net6.0\PrismaticValleyFramework.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\mgadz\Documents\Stardew Mods\PrismaticValleyFramework\PrismaticValleyFramework\obj\Debug\net6.0\PrismaticValleyFramework.AssemblyInfoInputs.cache
-C:\Users\mgadz\Documents\Stardew Mods\PrismaticValleyFramework\PrismaticValleyFramework\obj\Debug\net6.0\PrismaticValleyFramework.AssemblyInfo.cs
-C:\Users\mgadz\Documents\Stardew Mods\PrismaticValleyFramework\PrismaticValleyFramework\obj\Debug\net6.0\PrismaticValleyFramework.csproj.CoreCompileInputs.cache
-C:\Users\mgadz\Documents\Stardew Mods\PrismaticValleyFramework\PrismaticValleyFramework\obj\Debug\net6.0\PrismaticValleyFramework.dll
-C:\Users\mgadz\Documents\Stardew Mods\PrismaticValleyFramework\PrismaticValleyFramework\obj\Debug\net6.0\PrismaticValleyFramework.sourcelink.json

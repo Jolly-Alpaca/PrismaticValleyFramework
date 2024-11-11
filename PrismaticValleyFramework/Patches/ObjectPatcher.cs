@@ -280,7 +280,7 @@ namespace PrismaticValleyFramework.Patches
                 // Find the start of the draw method for sprinkler attachments
                 matcher.MatchStartForward(
                     new CodeMatch(OpCodes.Ldarg_1), // Load SpriteBatch
-                    new CodeMatch(OpCodes.Ldloc_S), // Load local variable 21: dataOrErrorItem4
+                    new CodeMatch(OpCodes.Ldloc_S), // Load local variable 22: dataOrErrorItem4 || Variable changed from 21 to 22 in 1.6.9
                     new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(ParsedItemData), nameof(ParsedItemData.GetTexture)))
                 ).ThrowIfNotMatch("Could not find proper entry point for sprinkler attachments in draw_Transpiler in Object");
                 // Advance from match to the call to Color.White in the draw method for sprinkler attachments
@@ -289,8 +289,9 @@ namespace PrismaticValleyFramework.Patches
                 ).ThrowIfNotMatch("Could not find proper entry point for Color.White for sprinkler attachments in draw_Transpiler in Object");
                 
                 // Load the ParsedItemData (dataOrErrorItem4) as the parameter for the custom get color method
+                // Variable changed from 21 to 22 in 1.6.9
                 matcher.InsertAndAdvance(
-                    new CodeInstruction(OpCodes.Ldloc_S, 21)
+                    new CodeInstruction(OpCodes.Ldloc_S, 22)
                 );
                 // Replace the call to Color.White with a call to the custom get color method
                 matcher.Set(OpCodes.Call, AccessTools.Method(typeof(ParseCustomFields), nameof(ParseCustomFields.getCustomColorFromParsedItemData)));
@@ -298,7 +299,7 @@ namespace PrismaticValleyFramework.Patches
                 // Find the start of the draw method for held objects within the object
                 matcher.MatchStartForward(
                     new CodeMatch(OpCodes.Ldarg_1), // Load SpriteBatch
-                    new CodeMatch(OpCodes.Ldloc_S) // Load local variable 25: texture3
+                    new CodeMatch(OpCodes.Ldloc_S) // Load local variable 26: texture3 || Variable changed from 25 to 26 in 1.6.9
                 ).ThrowIfNotMatch("Could not find proper entry point for held objects within the object in draw_Transpiler in Object");
                 // Advance from match to the call to Color.White in the draw method for held objects within the object
                 matcher.MatchStartForward(
@@ -306,8 +307,9 @@ namespace PrismaticValleyFramework.Patches
                 ).ThrowIfNotMatch("Could not find proper entry point for Color.White for held objects within the object in draw_Transpiler in Object");
                 
                 // Load the ParsedItemData (dataOrErrorItem5) as the parameter for the custom get color method
+                // Variable changed from 24 to 25 in 1.6.9
                 matcher.InsertAndAdvance(
-                    new CodeInstruction(OpCodes.Ldloc_S, 24)
+                    new CodeInstruction(OpCodes.Ldloc_S, 25)
                 );
                 // Replace the call to Color.White with a call to the custom get color method
                 matcher.Set(OpCodes.Call, AccessTools.Method(typeof(ParseCustomFields), nameof(ParseCustomFields.getCustomColorFromParsedItemData)));

@@ -90,10 +90,11 @@ namespace PrismaticValleyFramework.Patches
             try
             {
                 // Find color * transparency passed as the color argument in the draw method in drawInMenu
+                // 11/24 - Switch to operand as name serves a different purpose
                 var matcher = new CodeMatcher(code, il);
                 matcher.MatchStartForward(
-                    new CodeMatch(OpCodes.Ldarg_S, null, "color"), // Load color arg for multiply
-                    new CodeMatch(OpCodes.Ldarg_S, null, "transparency") // Load transparency for multiply
+                    new CodeMatch(OpCodes.Ldarg_S, (byte) 7), // Load color arg for multiply
+                    new CodeMatch(OpCodes.Ldarg_S, (byte) 4) // Load transparency for multiply
                 ).ThrowIfNotMatch("Could not find proper entry point for drawInMenu_Transpiler");
                 
                 // Replace the color variable (as applicable) before it is multiplied by transparency

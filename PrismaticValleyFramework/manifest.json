@@ -1,10 +1,22 @@
 {
+  /*
+   | This file is automatically updated by ModManifestBuilder
+   | when the project is compiled.
+   | 
+   | Changes made to this file may be overwritten.
+   | 
+   */
+  "$schema": "https://smapi.io/schemas/manifest.json",
+  "UniqueID": "JollyLlama.PrismaticValleyFramework",
   "Name": "Prismatic Valley Framework",
   "Author": "JollyLlama",
-  "Version": "1.1.0",
+  "Version": "1.2.0",
   "Description": "Framework for adding the prismatic effect to other objects in Stardew Valley",
-  "UniqueID": "JollyLlama.PrismaticValleyFramework",
+  "MinimumApiVersion": "4.1",
+  "MinimumGameVersion": "1.6.13",
   "EntryDll": "PrismaticValleyFramework.dll",
-  "MinimumApiVersion": "4.0.0",
-  "UpdateKeys": [ "GitHub:Jolly-Alpaca/PrismaticValleyFramework", "Nexus:25287" ]
+  "UpdateKeys": [
+    "GitHub:Jolly-Alpaca/PrismaticValleyFramework",
+    "Nexus:25287"
+  ]
 }
